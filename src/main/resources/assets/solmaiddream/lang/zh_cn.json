@@ -1,0 +1,20 @@
+{
+  "tooltip.solmaid.jade_maid.not_eaten" : "还没尝过呢! 她可能会喜欢的，你觉得呢？",
+  "tooltip.solmaid.jade_maid.eaten" : "已食用: 用于增加生命值",
+  "tooltip.solmaid.jade_maid.eaten_count" : "吃过的食物种类数: %s",
+  "message.solmaid.milestone_achieved": "多么独特的味道! 您的女仆已经获得了%s!",
+  "message.solmaid.finished": "您的女仆追寻独特食物的愿望终于得到满足.",
+  "message.solmaid.favorability_increased": "好感度 + %s!",
+  "message.solmaid.hearts": "%s 颗心",
+  "message.solmaid.armor": "%s 点护甲值",
+  "message.solmaid.attack_damage": "%s 攻击力",
+  "screen.solmaid.title": "吃过的食物",
+  "config.solmaid.server.milestones": "女仆解锁每个里程碑需要吃的不同种类食物的数量",
+  "config.solmaid.server.hearts_per_milestone": "每达到一个新的里程碑，女仆获得的血量加成",
+  "config.solmaid.server.armor_per_milestone": "每达到一个新的里程碑，女仆获得的护甲值加成",
+  "config.solmaid.server.attack_damage_per_milestone" : "每达到一个新的里程碑，女仆获得的攻击伤害加成",
+  "config.solmaid.server.favorability_per_milestone": "每达到一个新的里程碑，女仆增加的好感度",
+  "config.solmaid.server.count_invalid_mod_food": "是否计入未加载的Mod食物",
+  "config.solmaid.server.effect_auras": "根据达成的里程碑生效的效果光环",
+  "config.solmaid.client.item_per_line": "每行显示的食物数量"
+}

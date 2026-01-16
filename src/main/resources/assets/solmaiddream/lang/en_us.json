@@ -1,0 +1,20 @@
+{
+  "tooltip.solmaid.jade_maid.not_eaten" : "Not yet eaten! She might like it, don't you think?",
+  "tooltip.solmaid.jade_maid.eaten" : "Eaten: Assisted in adding hearts",
+  "tooltip.solmaid.jade_maid.eaten_count" : "Number of food types consumed: %s",
+  "message.solmaid.milestone_achieved": "What a unique flavor! Your maid has gained %s!",
+  "message.solmaid.finished": "Your maid's desire to seek unique foods is finally satisfied.",
+  "message.solmaid.favorability_increased": "Favorability + %s!",
+  "message.solmaid.hearts": "%s hearts",
+  "message.solmaid.armor": "%s armor value",
+  "message.solmaid.attack_damage": "%s attack damage",
+  "screen.solmaid.title": "Eaten food list",
+  "config.solmaid.server.milestones": "The count of types of food your maid has to eat to unlock milestones",
+  "config.solmaid.server.hearts_per_milestone": "When a new milestone reached,the count of hearts your maid gains",
+  "config.solmaid.server.armor_per_milestone": "When a new milestone reached,the value of armor value your maid gains",
+  "config.solmaid.server.attack_damage_per_milestone" : "When a new milestone reached,the value of attack damage your maid gains",
+  "config.solmaid.server.favorability_per_milestone": "When a new milestone reached,the value of favorability your maid gains",
+  "config.solmaid.server.count_invalid_mod_food": "Will food types of unloaded mods be included in",
+  "config.solmaid.server.effect_auras": "Effect auras to apply decided by milestones reached",
+  "config.solmaid.client.item_per_line": "The count of food showed per line"
+}
