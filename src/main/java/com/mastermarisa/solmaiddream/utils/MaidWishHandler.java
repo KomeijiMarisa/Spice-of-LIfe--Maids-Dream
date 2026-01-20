@@ -7,12 +7,15 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
 import com.mastermarisa.solmaiddream.config.ModServerConfig;
 import com.mastermarisa.solmaiddream.data.FoodList;
+import com.mastermarisa.solmaiddream.data.MaidInfo;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
 import com.mastermarisa.solmaiddream.render.MaidWishChatBubbleData;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.OutgoingChatMessage;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -25,13 +28,12 @@ public class MaidWishHandler {
         for (EntityMaid maid : maids){
             handleExistWish(maid);
             tryGenerateWish(maid);
-            SOLMaidDream.LOGGER.debug("WishAchieved:" + maid.getData(ModAttachmentTypes.FOOD_LIST).getWishesAchieved());
         }
     }
 
     public static void tryGenerateWish(EntityMaid maid){
         FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-        if (foodList.getFoods().size() >= ModServerConfig.MINIMAL_FOOD_TYPES_TO_GENERATE_WISHES.getAsInt()){
+        if (foodList.getFoods().size() >= ModServerConfig.getMinimalFoodTypesToGenerateWishes()){
             List<String> wishes = getCurrentWishes(maid);
             List<String> foods = new ArrayList<>(foodList.getFoods().stream().toList());
             Collections.shuffle(foods);
@@ -46,7 +48,7 @@ public class MaidWishHandler {
 
     public static void handleExistWish(EntityMaid maid){
         FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-        if (foodList.getFoods().size() < ModServerConfig.MINIMAL_FOOD_TYPES_TO_GENERATE_WISHES.getAsInt()) return;
+        if (foodList.getFoods().size() < ModServerConfig.getMinimalFoodTypesToGenerateWishes()) return;
         foodList.setWishesCycleCount(foodList.getWishesCycleCount() + 1);
         if(foodList.getWishesCycleCount() >= 3){
             foodList.setWishesCycleCount(0);
@@ -79,6 +81,7 @@ public class MaidWishHandler {
         trySendHandleCycleResult(maid,foodList.getWishesAchievedInCycle());
         foodList.setWishesAchievedInCycle(0);
         AttributeHandler.updateModifiers(maid);
+        tryUpdateMaxWishBuff(maid,foodList);
     }
 
     private static void trySendHandleCycleResult(EntityMaid maid,int achieved){
@@ -86,23 +89,29 @@ public class MaidWishHandler {
         if (player instanceof ServerPlayer serverPlayer){
             switch (achieved){
                 case 0:
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("主人...理理我好不好嘛...").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("心愿值已清零！").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.to_zero_chat").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.to_zero").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
                     break;
                 case 1:
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("主人...有时间的话也多陪陪我吧~").withStyle(ChatFormatting.AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("心愿值已减半！").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.reduce_by_half_chat").withStyle(ChatFormatting.AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.reduce_by_half").withStyle(ChatFormatting.DARK_AQUA)),false, ChatType.bind(ChatType.CHAT, maid));
                     break;
                 case 2:
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("谢谢主人的关心~").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("心愿值+1！").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.add_one_chat").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.add_one").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
                     break;
                 case 3:
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("主人！你对我真好~（蹭蹭）").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("心愿值+2！").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.add_two_chat").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
+                    serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.wish_handler.add_two").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
                     break;
             }
         }
+    }
+
+    private static void tryUpdateMaxWishBuff(EntityMaid maid,FoodList foodList){
+        MaidInfo info = maid.getData(ModAttachmentTypes.MAID_INFO);
+        info.maxWishBuffCount = Math.max(info.maxWishBuffCount,foodList.getWishesAchieved());
+        maid.setData(ModAttachmentTypes.MAID_INFO,info);
     }
 
     public static boolean isInWishes(EntityMaid maid, ItemStack stack){
@@ -129,6 +138,6 @@ public class MaidWishHandler {
         boolean empty = bubbleManager.getChatBubbleDataCollection().isEmpty();
         if (!empty) return;
 
-        bubbleManager.addChatBubble(new MaidWishChatBubbleData(getCurrentWishes(maid).stream().map(ModUtils::getItemTextureLocation).toList()));
+        bubbleManager.addChatBubble(new MaidWishChatBubbleData(getCurrentWishes(maid).stream().map(ResourceLocation::parse).toList()));
     }
 }

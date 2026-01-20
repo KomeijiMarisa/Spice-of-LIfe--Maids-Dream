@@ -4,6 +4,7 @@ import com.mastermarisa.solmaiddream.config.ModServerConfig;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
 import com.mastermarisa.solmaiddream.event.*;
 import com.mastermarisa.solmaiddream.registry.CommonRegistry;
+import com.mastermarisa.solmaiddream.registry.InitItems;
 import com.mastermarisa.solmaiddream.utils.DayChangeListener;
 import com.mastermarisa.solmaiddream.utils.MaidTracker;
 import net.minecraft.resources.ResourceLocation;
@@ -29,6 +30,8 @@ public class SOLMaidDream {
 
     public SOLMaidDream(IEventBus modEventBus, ModContainer modContainer, Dist dist) {
         ModAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        InitItems.ITEMS.register(modEventBus);
+
         modEventBus.register(CommonRegistry.class);
 
         NeoForge.EVENT_BUS.register(OnMaidFoodEatenEvent.class);
@@ -37,11 +40,12 @@ public class SOLMaidDream {
         NeoForge.EVENT_BUS.register(OnDayChangedEvent.class);
         NeoForge.EVENT_BUS.register(MaidTracker.class);
         NeoForge.EVENT_BUS.register(OnPlayerInteractMaidEvent.class);
+        NeoForge.EVENT_BUS.register(OnServerStartingEvent.class);
+        NeoForge.EVENT_BUS.register(OnPlayerOpenFoodListScreenEvent.class);
         if (OnAddJadeInfoEvent.JADE_LOADED){
             NeoForge.EVENT_BUS.register(OnAddJadeInfoEvent.class);
         }
 
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, ModServerConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.CLIENT, ModServerConfig.CLIENT_SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ModServerConfig.SPEC);
     }
 }

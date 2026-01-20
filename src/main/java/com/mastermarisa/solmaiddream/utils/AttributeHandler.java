@@ -31,8 +31,8 @@ public class AttributeHandler {
         return getAttribute(maid,attribute).getModifier(ID);
     }
 
-    public static void updateArmorToughnessDamageModifier(EntityMaid maid){
-        double totalArmorToughnessDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt();
+    public static void updateArmorToughnessModifier(EntityMaid maid){
+        double totalArmorToughnessDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getArmorToughnessPerMilestone();
         totalArmorToughnessDamageModifier = applyWishBuff(totalArmorToughnessDamageModifier,maid);
         if (!maid.level().isClientSide()){
             AttributeModifier modifier = new AttributeModifier(ARMOR_TOUGHNESS_MODIFIER_ID,totalArmorToughnessDamageModifier,AttributeModifier.Operation.ADD_VALUE);
@@ -43,7 +43,7 @@ public class AttributeHandler {
     }
 
     public static void updateFoodAttackDamageModifier(EntityMaid maid){
-        double totalAttackDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.ATTACK_DAMAGE_PER_MILESTONE.getAsInt();
+        double totalAttackDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getAttackDamagePerMilestone();
         totalAttackDamageModifier = applyWishBuff(totalAttackDamageModifier,maid);
         if (!maid.level().isClientSide()){
             AttributeModifier modifier = new AttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,totalAttackDamageModifier,AttributeModifier.Operation.ADD_VALUE);
@@ -54,7 +54,7 @@ public class AttributeHandler {
     }
 
     public static void updateFoodArmorModifier(EntityMaid maid){
-        double totalArmorModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.ARMOR_PER_MILESTONE.getAsInt();
+        double totalArmorModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getArmorPerMilestone();
         totalArmorModifier = applyWishBuff(totalArmorModifier,maid);
         if (!maid.level().isClientSide()){
             AttributeModifier modifier = new AttributeModifier(ARMOR_MODIFIER_ID,totalArmorModifier,AttributeModifier.Operation.ADD_VALUE);
@@ -65,7 +65,7 @@ public class AttributeHandler {
     }
 
     public static void updateFoodHPModifier(EntityMaid maid){
-        double totalHealthModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.HP_PER_MILESTONE.getAsInt();
+        double totalHealthModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getHPPerMilestone();
         totalHealthModifier = applyWishBuff(totalHealthModifier,maid);
         if (!maid.level().isClientSide()){
             AttributeModifier modifier = new AttributeModifier(HEALTH_MODIFIER_ID,totalHealthModifier,AttributeModifier.Operation.ADD_VALUE);
@@ -74,7 +74,7 @@ public class AttributeHandler {
     }
 
     private static double applyWishBuff(double value, EntityMaid maid){
-        return Math.ceil(value * ((ModServerConfig.WISH_BUFF_ADD_VALUE_PERCENT.getAsInt() / 100d) * MaidWishHandler.getWishesAchieved(maid) + 1));
+        return Math.ceil(value * ((ModServerConfig.getWishBuffAddValuePercent() / 100d) * MaidWishHandler.getWishesAchieved(maid) + 1));
     }
 
     private static void updateHealthModifier(EntityMaid maid, AttributeModifier modifier) {
@@ -90,7 +90,7 @@ public class AttributeHandler {
     public static void updateModifiers(EntityMaid maid){
         updateFoodHPModifier(maid);
         updateFoodArmorModifier(maid);
-        updateArmorToughnessDamageModifier(maid);
+        updateArmorToughnessModifier(maid);
         updateFoodAttackDamageModifier(maid);
     }
 }

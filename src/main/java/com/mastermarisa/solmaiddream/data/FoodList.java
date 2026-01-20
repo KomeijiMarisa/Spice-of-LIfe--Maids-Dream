@@ -7,23 +7,25 @@ import com.mastermarisa.solmaiddream.utils.AttributeHandler;
 import com.mastermarisa.solmaiddream.utils.FoodNutritionManager;
 import com.mastermarisa.solmaiddream.utils.ModUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.OutgoingChatMessage;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,6 @@ public class FoodList implements INBTSerializable<CompoundTag> {
     private int wishesAchievedInCycle = 0;
     private double totalFoodValue = 0d;
     private int reachedMilestone = -1;
-    public List<Item> foodItems = new ArrayList<>();
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
@@ -78,13 +79,7 @@ public class FoodList implements INBTSerializable<CompoundTag> {
     }
 
     public List<Item> getFoodItems(){
-        if (foodItems.isEmpty()){
-            for (String str : foods){
-                foodItems.add(ModUtils.decodeItem(str));
-            }
-        }
-
-        return foodItems;
+        return foods.stream().map(ModUtils::decodeItem).toList();
     }
 
     public void refreshTotalFoodValue(){
@@ -112,7 +107,6 @@ public class FoodList implements INBTSerializable<CompoundTag> {
 
     public void addFoodByMaid(ItemStack stack, EntityMaid maid){
         if (FoodNutritionManager.filter(stack,maid)){
-            SOLMaidDream.LOGGER.debug("filterPassed");
             int pre = foods.size();
             foods.add(ModUtils.encodeItem(stack.getItem()));
             if (foods.size() != pre) tryUpdateMilestone(stack,maid);
@@ -120,25 +114,24 @@ public class FoodList implements INBTSerializable<CompoundTag> {
     }
 
     public void tryUpdateMilestone(ItemStack stack, EntityMaid maid){
-        SOLMaidDream.LOGGER.debug("tryUpdateMilestone");
         totalFoodValue += FoodNutritionManager.getFoodValue(stack);
         List<? extends Integer> milestones = ModServerConfig.getMilestones();
         if (getReachedMilestone() + 1 < milestones.size() && getTotalFoodValue() >= milestones.get(getReachedMilestone() + 1)){
             this.reachedMilestone++;
             AttributeHandler.updateModifiers(maid);
-            int favor = ModServerConfig.FAVORABILITY_INCREASED_MILESTONE_REACHED.getAsInt();
+            int favor = ModServerConfig.getFavorabilityMilestoneReached();
             maid.getFavorabilityManager().add(favor);
             LivingEntity player = maid.getOwner();
             if (player instanceof ServerPlayer serverPlayer){
                 serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("真是独特的味道...啊，谢谢主人~").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
                 if (favor != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("好感度+" + favor + "!").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                int HP = ModServerConfig.HP_PER_MILESTONE.getAsInt();
+                int HP = ModServerConfig.getHPPerMilestone();
                 if (HP != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("生命值+" + HP + "!").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                int armor = ModServerConfig.ARMOR_PER_MILESTONE.getAsInt();
+                int armor = ModServerConfig.getArmorPerMilestone();
                 if (armor != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("护甲值+" + armor + "!").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                int armor_toughness = ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt();
+                int armor_toughness = ModServerConfig.getArmorToughnessPerMilestone();
                 if (armor_toughness != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("护甲韧性值+" + armor_toughness + "!").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
-                int attack_damage = ModServerConfig.ATTACK_DAMAGE_PER_MILESTONE.getAsInt();
+                int attack_damage = ModServerConfig.getAttackDamagePerMilestone();
                 if (attack_damage != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.literal("攻击伤害+" + attack_damage + "!").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
             }
         }

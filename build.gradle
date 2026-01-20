@@ -137,6 +137,7 @@ dependencies {
     // implementation project(":myproject")
     implementation "curse.maven:touhou-little-maid-355044:7307724"
     implementation "curse.maven:jade-324717:7428884"
+    implementation "curse.maven:irisshaders-455508:6661598"
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

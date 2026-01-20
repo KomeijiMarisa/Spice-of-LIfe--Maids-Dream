@@ -1,6 +1,9 @@
 package com.mastermarisa.solmaiddream.utils;
 
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
+import com.mastermarisa.solmaiddream.SOLMaidDream;
+import com.mastermarisa.solmaiddream.data.MaidInfo;
+import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
@@ -21,7 +24,8 @@ public class MaidTracker {
     @SubscribeEvent
     public static void onEntityLeave(EntityLeaveLevelEvent event) {
         if (!event.getLevel().isClientSide() && event.getEntity().getType() == EntityMaid.TYPE) {
-            maids.remove((EntityMaid) event.getEntity());
+            EntityMaid maid = (EntityMaid) event.getEntity();
+            maids.remove(maid);
         }
     }
 

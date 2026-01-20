@@ -4,6 +4,7 @@ import com.github.tartaricacid.touhoulittlemaid.api.event.AddJadeInfoEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.data.FoodList;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
+import com.mastermarisa.solmaiddream.utils.FoodNutritionManager;
 import com.mastermarisa.solmaiddream.utils.MaidWishHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,18 +22,22 @@ public class OnAddJadeInfoEvent {
         EntityMaid maid = event.getMaid();
         ITooltip tooltip = event.getTooltip();
         FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-        tooltip.add(Component.literal("吃过的食物：" + foodList.getFoods().size()).withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.translatable("jade.solmaiddream.tooltip.eaten_food_count").append(String.valueOf(foodList.getFoods().size())).withStyle(ChatFormatting.AQUA));
         Player player = (Player) event.getMaid().getOwner();
         if(player == null) return;
         ItemStack stack = player.getMainHandItem();
         if(stack.getItem().getFoodProperties(stack,player) != null){
-            if(foodList.isFoodEaten(stack)){
-                tooltip.add(Component.literal("已食用：用于提升属性").withStyle(ChatFormatting.GRAY));
+            if (FoodNutritionManager.filter(stack,maid)){
+                if(foodList.isFoodEaten(stack)){
+                    tooltip.add(Component.translatable("jade.solmaiddream.tooltip.eaten_food").withStyle(ChatFormatting.GRAY));
+                } else {
+                    tooltip.add(Component.translatable("jade.solmaiddream.tooltip.untried_food").withStyle(ChatFormatting.AQUA));
+                }
             } else {
-                tooltip.add(Component.literal("还没尝过呢! 她可能会喜欢的，你觉得呢？").withStyle(ChatFormatting.AQUA));
+                tooltip.add(Component.literal(FoodNutritionManager.getUncountableReason(stack,maid)).withStyle(ChatFormatting.GRAY));
             }
         }
-        tooltip.add(Component.literal("愿望值：" + MaidWishHandler.getWishesAchieved(maid)));
-        tooltip.add(Component.literal("愿望值结算周期：" + foodList.getWishesCycleCount() + "/" + 3));
+        tooltip.add(Component.translatable("jade.solmaiddream.tooltip.wish_value").append(String.valueOf(MaidWishHandler.getWishesAchieved(maid))));
+        tooltip.add(Component.translatable("jade.solmaiddream.tooltip.wish_value_cycle").append(foodList.getWishesCycleCount() + "/" + 3));
     }
 }
