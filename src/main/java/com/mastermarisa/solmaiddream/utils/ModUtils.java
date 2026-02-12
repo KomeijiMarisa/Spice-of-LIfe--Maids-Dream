@@ -11,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ModUtils {
-    public static final boolean IRIS_LOADED = ModList.get().isLoaded("iris");
+    public static final boolean OCULUS_LOADED = ModList.get().isLoaded("oculus");
 
     public static void writeStringSet(CompoundTag tag, String key, Set<String> stringSet) {
         ListTag listTag = new ListTag();

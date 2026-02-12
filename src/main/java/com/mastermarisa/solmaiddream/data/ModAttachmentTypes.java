@@ -1,18 +1,47 @@
 package com.mastermarisa.solmaiddream.data;
 
-import com.mastermarisa.solmaiddream.SOLMaidDream;
-import com.mojang.serialization.Codec;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import java.util.function.Supplier;
+import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
+import com.mastermarisa.solmaiddream.capability.FoodListCapability;
+import com.mastermarisa.solmaiddream.capability.MaidInfoCapability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class ModAttachmentTypes {
-    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
-            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, SOLMaidDream.MOD_ID);
+    public static FoodList getFoodList(EntityMaid maid) {
+        LazyOptional<FoodList> cap = maid.getCapability(FoodListCapability.FOOD_LIST);
+        return cap.orElseThrow(() -> new IllegalStateException("女仆不存在 FoodList 能力" + maid.getName()));
+    }
 
-    public static final Supplier<AttachmentType<FoodList>> FOOD_LIST = ATTACHMENT_TYPES.register("foodlist", ()-> AttachmentType.serializable(FoodList::new).sync(new FoodListSyncHandler()).build());
-    public static final Supplier<AttachmentType<MaidInfo>> MAID_INFO = ATTACHMENT_TYPES.register("maidinfo", ()-> MaidInfo.TYPE);
+    /**
+     * 设置并同步 FoodList
+     * @param maid 女仆对象
+     * @param foodList FoodList
+     */
+    public static void setFoodList(EntityMaid maid, FoodList foodList) {
+        LazyOptional<FoodList> cap = maid.getCapability(FoodListCapability.FOOD_LIST);
+        cap.ifPresent(f -> {
+            f.setFoods(foodList.getFoods());
+            f.setCurrentWishes(foodList.getCurrentWishes());
+            f.setWishesAchieved(foodList.getWishesAchieved());
+            f.setWishesCycleCount(foodList.getWishesCycleCount());
+            f.setWishesAchievedInCycle(foodList.getWishesAchievedInCycle());
+            f.setTotalFoodValue(foodList.getTotalFoodValue());
+            f.setReachedMilestone(foodList.getReachedMilestone());
+            f.markDirty(maid);
+        });
+    }
+
+    public static MaidInfo getMaidInfo(EntityMaid maid) {
+        LazyOptional<MaidInfo> cap = maid.getCapability(MaidInfoCapability.MAID_INFO);
+        return cap.orElse(new MaidInfo());
+    }
+
+    public static void setMaidInfo(EntityMaid maid, MaidInfo maidInfo) {
+        LazyOptional<MaidInfo> cap = maid.getCapability(MaidInfoCapability.MAID_INFO);
+        cap.ifPresent(m -> {
+            m.existTime = maidInfo.existTime;
+            m.achievedWishCount = maidInfo.achievedWishCount;
+            m.maxWishBuffCount = maidInfo.maxWishBuffCount;
+            m.markDirty(maid);
+        });
+    }
 }

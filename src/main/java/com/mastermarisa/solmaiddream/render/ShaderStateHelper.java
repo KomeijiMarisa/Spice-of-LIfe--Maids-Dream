@@ -1,9 +1,8 @@
 package com.mastermarisa.solmaiddream.render;
 
 import net.irisshaders.iris.api.v0.IrisApi;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ShaderStateHelper {

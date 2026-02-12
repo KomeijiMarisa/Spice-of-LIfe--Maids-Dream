@@ -4,9 +4,9 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
 import com.mastermarisa.solmaiddream.data.MaidInfo;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 
 import java.util.ArrayList;
 import java.util.List;

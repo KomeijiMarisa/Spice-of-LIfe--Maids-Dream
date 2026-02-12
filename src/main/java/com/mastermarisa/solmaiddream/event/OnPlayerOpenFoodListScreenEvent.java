@@ -7,11 +7,8 @@ import com.mastermarisa.solmaiddream.render.ui.FoodListScreen;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 //@OnlyIn(Dist.CLIENT)
 //@EventBusSubscriber(modid = SOLMaidDream.MOD_ID,value = Dist.CLIENT)

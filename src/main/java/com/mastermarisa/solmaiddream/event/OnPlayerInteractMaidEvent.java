@@ -6,7 +6,7 @@ import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.IChatBubbleDat
 import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.implement.ImageChatBubbleData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.NetworkHandler;
-import com.github.tartaricacid.touhoulittlemaid.network.message.SpawnParticlePackage;
+import com.github.tartaricacid.touhoulittlemaid.network.message.SpawnParticleMessage;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
 import com.mastermarisa.solmaiddream.data.MaidInfo;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
@@ -20,11 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class OnPlayerInteractMaidEvent {
     @SubscribeEvent
@@ -52,13 +49,13 @@ public class OnPlayerInteractMaidEvent {
                         return false;
                     });
                     maid.startUsingItem(hand);
-                    int nutrition = foodProperties.nutrition();
-                    float saturation = foodProperties.saturation();
+                    int nutrition = foodProperties.getNutrition();
+                    float saturation = foodProperties.getSaturationModifier();
                     float total = (float)nutrition + saturation;
                     if ((float)maid.getRandom().nextInt(5) < total) {
                         float healCount = Math.max(total / 5.0F, 1.0F);
                         maid.heal(healCount);
-                        NetworkHandler.sendToNearby(maid, new SpawnParticlePackage(maid.getId(), SpawnParticlePackage.Type.HEAL, stack.getUseDuration(maid)));
+                        NetworkHandler.sendToNearby(maid, new SpawnParticleMessage(maid.getId(), SpawnParticleMessage.Type.HEAL, stack.getUseDuration()));
                     }
                     event.setCanceled(true);
                 } else if (stack.is(Items.BOWL)){

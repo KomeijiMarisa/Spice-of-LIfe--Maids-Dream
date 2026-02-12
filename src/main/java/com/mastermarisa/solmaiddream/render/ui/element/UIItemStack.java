@@ -1,10 +1,13 @@
 package com.mastermarisa.solmaiddream.render.ui.element;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.awt.Rectangle;
 import java.util.List;
@@ -31,7 +34,11 @@ public class UIItemStack extends UIElement {
         if (!hasTooltip()) return;
         boolean hover = frame.contains(mouseX,mouseY);
         if (hover){
-            List<Component> tooltip = this.itemStack.getTooltipLines(Item.TooltipContext.of(mc.level), mc.player, mc.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
+            Player currentPlayer = mc.player;
+            List<Component> tooltip = this.itemStack.getTooltipLines(
+                    currentPlayer,
+                    mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL
+            );
             this.renderTooltip(graphics, this.itemStack, tooltip, mouseX, mouseY);
         }
     }

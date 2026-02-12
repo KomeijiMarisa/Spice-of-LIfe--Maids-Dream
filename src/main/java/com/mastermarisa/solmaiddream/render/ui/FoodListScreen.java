@@ -20,16 +20,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.config.ModConfig;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
+public class FoodListScreen extends Screen implements PageFlipButton.Pageable {
     private static final int itemSize = 16;
     private static final int startY = 40;
     private static final Minecraft mc = Minecraft.getInstance();
@@ -70,7 +69,7 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
         hungerImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/food_book.png"),new Rectangle(19,227,9,9),9,9,400,256);
         bookImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/food_book.png"),new Rectangle(1,1,147,182),147,182,400,256);
         heartImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/food_book.png"),new Rectangle(3,227,9,9),9,9,400,256);
-        armorImage = new ImageData(ResourceLocation.fromNamespaceAndPath("minecraft","textures/gui/sprites/hud/armor_full.png"),new Rectangle(0,0,9,9),9,9,9,9);
+        armorImage = new ImageData(ResourceLocation.fromNamespaceAndPath("minecraft","textures/gui/icons.png"),new Rectangle(43,9,9,9),9,9,256,256);
         armorToughnessImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/armor_toughness.png"),new Rectangle(0,0,9,9),9,9,9,9);
         potatoChipImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/food_book.png"),new Rectangle(128,240,16,16),16,16,400,256);
         watermelonImage = new ImageData(SOLMaidDream.resourceLocation("textures/gui/food_book.png"),new Rectangle(96,240,16,16),16,16,400,256);
@@ -108,8 +107,8 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
         super(Component.empty());
         this.player = player;
         this.maid = maid;
-        this.foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-        this.maidInfo = maid.getData(ModAttachmentTypes.MAID_INFO);
+        this.foodList = ModAttachmentTypes.getFoodList(maid);
+        this.maidInfo = ModAttachmentTypes.getMaidInfo(maid);
         allFoodList = FoodNutritionManager.getFoodsByComponent();
 
         initPages();
@@ -131,11 +130,6 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
 
         prePageButton.render(graphics,mouseX,mouseY,partialTicks);
         nextPageButton.render(graphics,mouseX,mouseY,partialTicks);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     @Override
@@ -191,6 +185,12 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
             resetUIPageNumber();
             updateButtonVisibility();
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+        switchToPage(this.getCurrentPageNumber() + scrollDelta > 0 ? 1 : -1);
+        return true;
     }
 
     public int getCurrentPageNumber() {

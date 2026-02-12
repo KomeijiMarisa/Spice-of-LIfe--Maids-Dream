@@ -25,6 +25,12 @@
   "chat.solmaiddream.wish_handler.add_two": "心愿值+2！",
   "chat.solmaiddream.event.daily_wish_chat": "谢谢主人！我好高兴~",
   "chat.solmaiddream.event.daily_wish": "好感度 + %s !",
+  "chat.solmaiddream.milestone.reached": "真是独特的味道...啊，谢谢主人~",
+  "chat.solmaiddream.milestone.favorability": "好感度+%s!",
+  "chat.solmaiddream.milestone.hp": "生命值+%s!",
+  "chat.solmaiddream.milestone.armor": "护甲值+%s!",
+  "chat.solmaiddream.milestone.armor_toughness": "护甲韧性值+%s!",
+  "chat.solmaiddream.milestone.attack_damage": "攻击伤害+%s!",
 
   "jade.solmaiddream.tooltip.eaten_food_count": "吃过的食物：",
   "jade.solmaiddream.tooltip.eaten_food": "已食用：用于提升属性",
@@ -38,11 +44,19 @@
   "jade.solmaiddream.tooltip.debug": "你是怎么看到这个的？",
 
   "config.solmaiddream.server.milestones": "女仆解锁每个里程碑需要吃的不同种类食物的数量",
+  "config.solmaiddream.server.favorability_per_daily_wish": "完成每日愿望时增加的好感度",
+  "config.solmaiddream.server.wish_buff_percent": "完成当天所有愿望后，女仆全属性增加的百分比",
   "config.solmaiddream.server.hearts_per_milestone": "每达到一个新的里程碑，女仆获得的血量加成",
   "config.solmaiddream.server.armor_per_milestone": "每达到一个新的里程碑，女仆获得的护甲值加成",
   "config.solmaiddream.server.armor_toughness_per_milestone": "每达到一个新的里程碑，女仆获得的护甲韧性加成",
   "config.solmaiddream.server.attack_damage_per_milestone" : "每达到一个新的里程碑，女仆获得的攻击伤害加成",
   "config.solmaiddream.server.favorability_per_milestone": "每达到一个新的里程碑，女仆增加的好感度",
+  "config.solmaiddream.server.minimal_hunger_value": "食物触发属性加成所需的最低饥饿值",
+  "config.solmaiddream.server.minimal_nutrition": "食物触发属性加成所需的最低饱食度",
+  "config.solmaiddream.server.minimal_food_types_for_wishes": "女仆生成愿望所需的最少食物种类数",
+  "config.solmaiddream.server.food_blacklist": "食物黑名单（这些食物不会被计入）",
+  "config.solmaiddream.server.food_whitelist": "食物白名单（如果设置，仅这些食物会被计入）",
+  "config.solmaiddream.server.mod_blacklist": "MOD黑名单（这些模组的食物不会被计入）",
 
   "item.solmaiddream.food_book": "女仆与香辛料"
 }

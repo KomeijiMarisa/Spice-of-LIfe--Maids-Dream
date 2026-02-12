@@ -25,6 +25,12 @@
   "chat.solmaiddream.wish_handler.add_two": "Wish value +2!",
   "chat.solmaiddream.event.daily_wish_chat": "Thank you, Master! I'm so happy~",
   "chat.solmaiddream.event.daily_wish": "Favorability + %s !",
+  "chat.solmaiddream.milestone.reached": "What a unique taste... Ah, thank you, Master~",
+  "chat.solmaiddream.milestone.favorability": "Favorability+%s!",
+  "chat.solmaiddream.milestone.hp": "HP+%s!",
+  "chat.solmaiddream.milestone.armor": "Armor+%s!",
+  "chat.solmaiddream.milestone.armor_toughness": "Armor Toughness+%s!",
+  "chat.solmaiddream.milestone.attack_damage": "Attack Damage+%s!",
 
   "jade.solmaiddream.tooltip.eaten_food_count": "Tasted food:",
   "jade.solmaiddream.tooltip.eaten_food": "Tasted:Used to enhance attributes",
@@ -38,11 +44,19 @@
   "jade.solmaiddream.tooltip.debug": "How could you see this?",
 
   "config.solmaiddream.server.milestones": "The count of unique food your maids have to eat to unlock milestones",
+  "config.solmaiddream.server.favorability_per_daily_wish": "The favorability increase when a daily wish is fulfilled",
+  "config.solmaiddream.server.wish_buff_percent": "The percentage of all attributes increased when all daily wishes are completed",
   "config.solmaiddream.server.hearts_per_milestone": "When a new milestone reached,the value of HP your maid gains",
   "config.solmaiddream.server.armor_per_milestone": "When a new milestone reached,the value of armor your maid gains",
   "config.solmaiddream.server.armor_toughness_per_milestone": "When a new milestone reached,the value of armor toughness your maid gains",
   "config.solmaiddream.server.attack_damage_per_milestone" : "When a new milestone reached,the value of attack damage your maid gains",
   "config.solmaiddream.server.favorability_per_milestone": "When a new milestone reached,the value of favorability your maid gains",
+  "config.solmaiddream.server.minimal_hunger_value": "The minimum hunger value for food to trigger attribute bonuses",
+  "config.solmaiddream.server.minimal_nutrition": "The minimum nutrition value for food to trigger attribute bonuses",
+  "config.solmaiddream.server.minimal_food_types_for_wishes": "The minimum number of food types required for maid to generate wishes",
+  "config.solmaiddream.server.food_blacklist": "Blacklisted foods that won't be counted",
+  "config.solmaiddream.server.food_whitelist": "Whitelisted foods (only these foods will be counted if set)",
+  "config.solmaiddream.server.mod_blacklist": "Blacklisted mods (foods from these mods won't be counted)",
 
   "item.solmaiddream.food_book": "Foodbook"
 }

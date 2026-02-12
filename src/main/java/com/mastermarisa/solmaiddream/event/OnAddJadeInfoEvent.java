@@ -10,18 +10,21 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import snownee.jade.api.ITooltip;
 
 public class OnAddJadeInfoEvent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OnAddJadeInfoEvent.class);
     public static final boolean JADE_LOADED = ModList.get().isLoaded("jade");
 
     @SubscribeEvent
     public static void onAddJadeInfoEvent(AddJadeInfoEvent event){
         EntityMaid maid = event.getMaid();
         ITooltip tooltip = event.getTooltip();
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
         tooltip.add(Component.translatable("jade.solmaiddream.tooltip.eaten_food_count").append(String.valueOf(foodList.getFoods().size())).withStyle(ChatFormatting.AQUA));
         Player player = (Player) event.getMaid().getOwner();
         if(player == null) return;

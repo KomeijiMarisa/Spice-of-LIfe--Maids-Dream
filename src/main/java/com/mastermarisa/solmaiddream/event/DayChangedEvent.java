@@ -1,6 +1,6 @@
 package com.mastermarisa.solmaiddream.event;
 
-import net.neoforged.bus.api.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class DayChangedEvent extends Event {
     private final long newDay;

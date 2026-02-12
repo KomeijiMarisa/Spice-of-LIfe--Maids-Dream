@@ -1,29 +1,32 @@
 package com.mastermarisa.solmaiddream.registry;
 
-import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import com.github.tartaricacid.touhoulittlemaid.api.ILittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.ChatBubbleRegister;
-import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.implement.*;
-import com.google.common.collect.ImmutableMap;
+import com.mastermarisa.solmaiddream.event.OnStartingEvent;
+import com.mastermarisa.solmaiddream.network.NetworkHandler;
 import com.mastermarisa.solmaiddream.render.MaidWishChatBubbleData;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.neoforge.common.CreativeModeTabRegistry;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 
 public final class CommonRegistry {
-    @SubscribeEvent
-    public static void onSetupEvent(FMLCommonSetupEvent event) {
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(CommonRegistry::init);
     }
 
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MinecraftForge.EVENT_BUS.register(OnStartingEvent.class);
+        });
+    }
+
     public static void init(){
-        ChatBubbleRegister register = new ChatBubbleRegister();
-        register.register(MaidWishChatBubbleData.ID, new MaidWishChatBubbleData.MaidWishChatSerializer());
+        NetworkHandler.register();
     }
 
     @SubscribeEvent

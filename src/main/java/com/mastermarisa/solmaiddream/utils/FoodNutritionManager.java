@@ -1,6 +1,8 @@
 package com.mastermarisa.solmaiddream.utils;
 
 import com.mastermarisa.solmaiddream.config.ModServerConfig;
+import com.mastermarisa.solmaiddream.event.OnAddJadeInfoEvent;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -11,11 +13,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FoodNutritionManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FoodNutritionManager.class);
     public static boolean filterByBlacklist(ItemStack stack, LivingEntity entity){
         //Food Blacklist
         if (ModServerConfig.getFoodBlacklist().contains(ModUtils.encodeItem(stack.getItem()))) return false;
@@ -27,8 +32,8 @@ public class FoodNutritionManager {
         //Hunger Value and Nutrition
         int hunger = ModServerConfig.getMinimalHungerValue();
         int nutrition = ModServerConfig.getMinimalNutrition();
-        if (foodProperties.nutrition() < hunger) return false;
-        if (foodProperties.saturation() + foodProperties.nutrition() < nutrition) return false;
+        if (foodProperties.getNutrition() < hunger) return false;
+        if (foodProperties.getSaturationModifier() + foodProperties.getNutrition() < nutrition) return false;
 
         //Harmful Effect
         if (containsHarmfulEffect(foodProperties)) return false;
@@ -43,9 +48,9 @@ public class FoodNutritionManager {
         FoodProperties foodProperties = stack.getFoodProperties(entity);
         int hunger = ModServerConfig.getMinimalHungerValue();
         int nutrition = ModServerConfig.getMinimalNutrition();
-        if (foodProperties.nutrition() < hunger)
+        if (foodProperties.getNutrition() < hunger)
             return Component.translatable("jade.solmaiddream.tooltip.insufficient_hunger").getString();
-        if (foodProperties.saturation() + foodProperties.nutrition() < nutrition)
+        if (foodProperties.getSaturationModifier() + foodProperties.getNutrition() < nutrition)
             return Component.translatable("jade.solmaiddream.tooltip.insufficient_nutrition").getString();
 
         if (containsHarmfulEffect(foodProperties))
@@ -65,8 +70,8 @@ public class FoodNutritionManager {
     public static boolean containsHarmfulEffect(FoodProperties foodProperties){
         if (foodProperties == null) return false;
 
-        for (FoodProperties.PossibleEffect possibleEffect : foodProperties.effects()){
-            if (possibleEffect.effect().getEffect().value().getCategory() == MobEffectCategory.HARMFUL){
+        for (Pair<MobEffectInstance, Float> possibleEffect : foodProperties.getEffects()){
+            if (possibleEffect.getFirst().getEffect().getCategory() == MobEffectCategory.HARMFUL){
                 return true;
             }
         }

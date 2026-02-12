@@ -22,20 +22,20 @@ public class AttributeHandler {
     private static final ResourceLocation ARMOR_TOUGHNESS_MODIFIER_ID = SOLMaidDream.resourceLocation("armor_toughness");
     private static final ResourceLocation ATTACK_DAMAGE_MODIFIER_ID = SOLMaidDream.resourceLocation("attack_damage");
 
-    private static AttributeInstance getAttribute(EntityMaid maid, Holder<Attribute> attribute) {
+    private static AttributeInstance getAttribute(EntityMaid maid, Attribute attribute) {
         return (AttributeInstance) Objects.requireNonNull(maid.getAttribute(attribute));
     }
 
-    @Nullable
-    private static AttributeModifier getModifier(EntityMaid maid, Holder<Attribute> attribute, ResourceLocation ID) {
-        return getAttribute(maid,attribute).getModifier(ID);
-    }
+//    @Nullable
+//    private static AttributeModifier getModifier(EntityMaid maid, Holder<Attribute> attribute, ResourceLocation ID) {
+//        return getAttribute(maid,attribute).getModifier(ID);
+//    }
 
     public static void updateArmorToughnessModifier(EntityMaid maid){
-        double totalArmorToughnessDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getArmorToughnessPerMilestone();
+        double totalArmorToughnessDamageModifier = (ModAttachmentTypes.getFoodList(maid).getReachedMilestone() + 1) * ModServerConfig.getArmorToughnessPerMilestone();
         totalArmorToughnessDamageModifier = applyWishBuff(totalArmorToughnessDamageModifier,maid);
         if (!maid.level().isClientSide()){
-            AttributeModifier modifier = new AttributeModifier(ARMOR_TOUGHNESS_MODIFIER_ID,totalArmorToughnessDamageModifier,AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier modifier = new AttributeModifier(ARMOR_TOUGHNESS_MODIFIER_ID.toString(),totalArmorToughnessDamageModifier,AttributeModifier.Operation.ADDITION);
             AttributeInstance attribute = getAttribute(maid,Attributes.ARMOR_TOUGHNESS);
             attribute.removeModifier(modifier);
             attribute.addPermanentModifier(modifier);
@@ -43,10 +43,10 @@ public class AttributeHandler {
     }
 
     public static void updateFoodAttackDamageModifier(EntityMaid maid){
-        double totalAttackDamageModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getAttackDamagePerMilestone();
+        double totalAttackDamageModifier = (ModAttachmentTypes.getFoodList(maid).getReachedMilestone() + 1) * ModServerConfig.getAttackDamagePerMilestone();
         totalAttackDamageModifier = applyWishBuff(totalAttackDamageModifier,maid);
         if (!maid.level().isClientSide()){
-            AttributeModifier modifier = new AttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,totalAttackDamageModifier,AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier modifier = new AttributeModifier(ATTACK_DAMAGE_MODIFIER_ID.toString(),totalAttackDamageModifier,AttributeModifier.Operation.ADDITION);
             AttributeInstance attribute = getAttribute(maid,Attributes.ATTACK_DAMAGE);
             attribute.removeModifier(modifier);
             attribute.addPermanentModifier(modifier);
@@ -54,10 +54,10 @@ public class AttributeHandler {
     }
 
     public static void updateFoodArmorModifier(EntityMaid maid){
-        double totalArmorModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getArmorPerMilestone();
+        double totalArmorModifier = (ModAttachmentTypes.getFoodList(maid).getReachedMilestone() + 1) * ModServerConfig.getArmorPerMilestone();
         totalArmorModifier = applyWishBuff(totalArmorModifier,maid);
         if (!maid.level().isClientSide()){
-            AttributeModifier modifier = new AttributeModifier(ARMOR_MODIFIER_ID,totalArmorModifier,AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier modifier = new AttributeModifier(ARMOR_MODIFIER_ID.toString(),totalArmorModifier,AttributeModifier.Operation.ADDITION);
             AttributeInstance attribute = getAttribute(maid,Attributes.ARMOR);
             attribute.removeModifier(modifier);
             attribute.addPermanentModifier(modifier);
@@ -65,10 +65,10 @@ public class AttributeHandler {
     }
 
     public static void updateFoodHPModifier(EntityMaid maid){
-        double totalHealthModifier = (maid.getData(ModAttachmentTypes.FOOD_LIST).getReachedMilestone() + 1) * ModServerConfig.getHPPerMilestone();
+        double totalHealthModifier = (ModAttachmentTypes.getFoodList(maid).getReachedMilestone() + 1) * ModServerConfig.getHPPerMilestone();
         totalHealthModifier = applyWishBuff(totalHealthModifier,maid);
         if (!maid.level().isClientSide()){
-            AttributeModifier modifier = new AttributeModifier(HEALTH_MODIFIER_ID,totalHealthModifier,AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier modifier = new AttributeModifier(HEALTH_MODIFIER_ID.toString(),totalHealthModifier,AttributeModifier.Operation.ADDITION);
             updateHealthModifier(maid,modifier);
         }
     }

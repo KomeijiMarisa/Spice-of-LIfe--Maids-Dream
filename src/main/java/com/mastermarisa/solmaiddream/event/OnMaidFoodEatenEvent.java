@@ -12,25 +12,28 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.OutgoingChatMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OnMaidFoodEatenEvent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OnMaidFoodEatenEvent.class);
     @SubscribeEvent
     public static void onFoodEaten(LivingEntityUseItemEvent.Finish event){
         LivingEntity entity = event.getEntity();
         if(entity instanceof EntityMaid maid){
-            FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-            foodList.addFoodByMaid(event.getItem(),maid);
-            maid.setData(ModAttachmentTypes.FOOD_LIST,foodList);
+            FoodList foodList = ModAttachmentTypes.getFoodList(maid);
+            foodList.addFoodByMaid(event.getItem(), maid);
+            ModAttachmentTypes.setFoodList(maid, foodList);
             if (MaidWishHandler.isInWishes(maid,event.getItem())){
                 MaidWishHandler.addWishesAchieved(maid);
                 LivingEntity player = maid.getOwner();
                 int favor = ModServerConfig.getFavorabilityDailyWishAchieved();
                 maid.getFavorabilityManager().add(favor);
-                MaidInfo info = maid.getData(ModAttachmentTypes.MAID_INFO);
+                MaidInfo info = ModAttachmentTypes.getMaidInfo(maid);
                 info.achievedWishCount ++;
-                maid.setData(ModAttachmentTypes.MAID_INFO,info);
+                ModAttachmentTypes.setMaidInfo(maid, info);
                 if(player instanceof ServerPlayer serverPlayer){
                     serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.event.daily_wish_chat").withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));
                     if (favor != 0) serverPlayer.sendChatMessage(new OutgoingChatMessage.Disguised(Component.translatable("chat.solmaiddream.event.daily_wish",favor).withStyle(ChatFormatting.GOLD)),false, ChatType.bind(ChatType.CHAT, maid));

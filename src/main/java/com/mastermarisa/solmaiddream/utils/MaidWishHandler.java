@@ -31,38 +31,59 @@ public class MaidWishHandler {
         }
     }
 
+    /**
+     * 生成愿望
+     * @param maid 女仆对象
+     */
     public static void tryGenerateWish(EntityMaid maid){
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
         if (foodList.getFoods().size() >= ModServerConfig.getMinimalFoodTypesToGenerateWishes()){
             List<String> wishes = getCurrentWishes(maid);
             List<String> foods = new ArrayList<>(foodList.getFoods().stream().toList());
             Collections.shuffle(foods);
             wishes.clear();
-            for (int i = 0;i < 3;i++){
-                wishes.add(foods.get(i));
-            }
-            foodList.setCurrentWishes(wishes);
-            maid.setData(ModAttachmentTypes.FOOD_LIST,foodList);
+            foodList.setCurrentWishes(foods.subList(0, 3));
+            ModAttachmentTypes.setFoodList(maid, foodList);
         }
     }
 
+    /**
+     * 处理遂愿
+     * @param maid 女仆对象
+     */
     public static void handleExistWish(EntityMaid maid){
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
+        // 已食用的食物少于生成愿望所需食物，则不处理
         if (foodList.getFoods().size() < ModServerConfig.getMinimalFoodTypesToGenerateWishes()) return;
+        // 愿望值结算次数+1
         foodList.setWishesCycleCount(foodList.getWishesCycleCount() + 1);
         if(foodList.getWishesCycleCount() >= 3){
             foodList.setWishesCycleCount(0);
             handleCycle(maid,foodList);
         }
-        maid.setData(ModAttachmentTypes.FOOD_LIST,foodList);
+        ModAttachmentTypes.setFoodList(maid, foodList);
     }
 
+    /**
+     * 获取当前愿望
+     * @param maid 女仆对象
+     * @return 愿望
+     */
     public static List<String> getCurrentWishes(EntityMaid maid){
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
 
         return foodList.getCurrentWishes();
     }
 
+    /**
+     * 处理遂愿
+     * @param maid 女仆对象
+     * @param foodList 食物列表对象
+     * 0次：遂愿清零；
+     * 1次：遂愿减半（向下取整）；
+     * 2次：遂愿 +1；
+     * 3次：遂愿 +2。
+     */
     private static void handleCycle(EntityMaid maid,FoodList foodList){
         switch (foodList.getWishesAchievedInCycle()){
             case 0:
@@ -109,28 +130,42 @@ public class MaidWishHandler {
     }
 
     private static void tryUpdateMaxWishBuff(EntityMaid maid,FoodList foodList){
-        MaidInfo info = maid.getData(ModAttachmentTypes.MAID_INFO);
+        MaidInfo info = ModAttachmentTypes.getMaidInfo(maid);
         info.maxWishBuffCount = Math.max(info.maxWishBuffCount,foodList.getWishesAchieved());
-        maid.setData(ModAttachmentTypes.MAID_INFO,info);
+        ModAttachmentTypes.setMaidInfo(maid, info);
     }
 
+    /**
+     * 是否在愿望单里
+     * @param maid 女仆的实体
+     * @param stack 物品
+     * @return true为在
+     */
     public static boolean isInWishes(EntityMaid maid, ItemStack stack){
         String id = ModUtils.encodeItem(stack.getItem());
         return getCurrentWishes(maid).contains(id);
     }
 
+    /**
+     * 添加愿望完成次数
+     * @param maid 女仆对象
+     */
     public static void addWishesAchieved(EntityMaid maid){
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
         foodList.setWishesAchievedInCycle(foodList.getWishesAchievedInCycle() + 1);
         getCurrentWishes(maid).clear();
-        maid.setData(ModAttachmentTypes.FOOD_LIST,foodList);
+        ModAttachmentTypes.setFoodList(maid, foodList);
     }
 
     public static int getWishesAchieved(EntityMaid maid){
-        FoodList foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
+        FoodList foodList = ModAttachmentTypes.getFoodList(maid);
         return foodList.getWishesAchieved();
     }
 
+    /**
+     * 尝试展示愿望（女仆头顶会生成气泡，显示想要的3个食物）
+     * @param maid 女仆对象
+     */
     public static void tryRenderWishes(EntityMaid maid){
         if (!maid.level().isClientSide()) return;
         if (getCurrentWishes(maid).isEmpty()) return;

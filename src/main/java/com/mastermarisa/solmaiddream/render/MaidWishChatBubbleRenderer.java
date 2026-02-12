@@ -1,48 +1,27 @@
 package com.mastermarisa.solmaiddream.render;
 
-import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMaidRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.EntityGraphics;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.IChatBubbleRenderer;
-import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
 import com.mastermarisa.solmaiddream.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityAttachment;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.*;
 
-import java.awt.*;
-import java.lang.Math;
 import java.util.List;
-
-import static net.minecraft.client.model.TridentModel.TEXTURE;
 
 public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
     private final int width;
@@ -109,7 +88,7 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
 
     private void RenderItemStackUnLit2D(ItemStack itemStack,ItemRenderer itemRenderer,MultiBufferSource buffer,PoseStack poseStack,int x,int y,float scale,int packedLight){
         boolean shader = false;
-        if (ModUtils.IRIS_LOADED){
+        if (ModUtils.OCULUS_LOADED){
             shader = ShaderStateHelper.shaderEnabled();
         }
 
@@ -157,7 +136,7 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
 
     private void RenderItemStackUnLit3D(ItemStack itemStack,ItemRenderer itemRenderer,MultiBufferSource buffer,PoseStack poseStack,int x,int y,float scale,int packedLight){
         boolean shader = false;
-        if (ModUtils.IRIS_LOADED){
+        if (ModUtils.OCULUS_LOADED){
             shader = ShaderStateHelper.shaderEnabled();
         }
 
@@ -176,7 +155,7 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
         poseStack.translate(x,y,-0.1f);
 //        poseStack.translate((x + 8),(y + 8),-0.1f);
         poseStack.scale(scale,-scale,-scale);
-        poseStack.mulPose(new Matrix4f().scale(1,1,0.01f));
+        poseStack.scale(1.0f, 1.0f, 0.01f);
 
         if (!shader){
             Vector3f vec = poseStack.last().pose().transformDirection(new Vector3f(0,0,1)).normalize();

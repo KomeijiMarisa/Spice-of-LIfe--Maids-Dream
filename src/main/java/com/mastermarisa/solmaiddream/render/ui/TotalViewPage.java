@@ -39,7 +39,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIHPInfo = UIContainerHorizontal.wrap(hpInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIHPInfo.setWidth(107);
         infos.add(UIHPInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.HP_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.HP_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.HP_PER_MILESTONE.get() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.HP_PER_MILESTONE.get(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> armorInfo = new ArrayList<>();
@@ -48,7 +48,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIArmorInfo = UIContainerHorizontal.wrap(armorInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIArmorInfo.setWidth(107);
         infos.add(UIArmorInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_PER_MILESTONE.get() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_PER_MILESTONE.get(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> armorToughnessInfo = new ArrayList<>();
@@ -57,7 +57,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIArmorToughnessInfo = UIContainerHorizontal.wrap(armorToughnessInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIArmorToughnessInfo.setWidth(107);
         infos.add(UIArmorToughnessInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.get() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.get(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> attackDamageInfo = new ArrayList<>();

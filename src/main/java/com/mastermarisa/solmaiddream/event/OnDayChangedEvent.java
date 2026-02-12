@@ -6,16 +6,16 @@ import com.mastermarisa.solmaiddream.data.MaidInfo;
 import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
 import com.mastermarisa.solmaiddream.utils.MaidTracker;
 import com.mastermarisa.solmaiddream.utils.MaidWishHandler;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class OnDayChangedEvent {
     @SubscribeEvent
     public static void onDayChangedEvent(DayChangedEvent event){
         MaidWishHandler.onDayChanged(MaidTracker.getMaids());
         for (EntityMaid maid : MaidTracker.getMaids()){
-            MaidInfo info = maid.getData(ModAttachmentTypes.MAID_INFO);
+            MaidInfo info = ModAttachmentTypes.getMaidInfo(maid);
             info.existTime++;
-            maid.setData(ModAttachmentTypes.MAID_INFO,info);
+            ModAttachmentTypes.setMaidInfo(maid, info);
         }
     }
 }

@@ -2,15 +2,16 @@ package com.mastermarisa.solmaiddream.utils;
 
 import com.mastermarisa.solmaiddream.event.DayChangedEvent;
 import net.minecraft.server.MinecraftServer;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 public class DayChangeListener {
     private static long lastKnownDay = -1;
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event){
+    public static void onServerTick(TickEvent.ServerTickEvent event){
         MinecraftServer server = event.getServer();
         if (server == null) return;
 
@@ -23,7 +24,7 @@ public class DayChangeListener {
 
             if (lastKnownDay != -1 && currentDay != lastKnownDay) {
                 DayChangedEvent dayChangedEvent = new DayChangedEvent(currentDay);
-                NeoForge.EVENT_BUS.post(dayChangedEvent);
+                EVENT_BUS.post(dayChangedEvent);
             }
             lastKnownDay = currentDay;
             break;
