@@ -1,9 +1,8 @@
 package com.mastermarisa.solmaiddream.render.ui;
 
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import com.mastermarisa.solmaiddream.config.ModServerConfig;
-import com.mastermarisa.solmaiddream.data.FoodList;
-import com.mastermarisa.solmaiddream.data.MaidInfo;
+import com.mastermarisa.solmaiddream.data.FoodRecord;
+import com.mastermarisa.solmaiddream.data.MaidWish;
 import com.mastermarisa.solmaiddream.render.ui.element.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +23,7 @@ public class MaidInfoPage extends Page{
                 new Rectangle(0,0,16,16),16,16,16,16);
     }
 
-    public MaidInfoPage(Rectangle frame, String header, FoodList foodList, MaidInfo maidInfo, long tickCount){
+    public MaidInfoPage(Rectangle frame, String header, FoodRecord foodList, MaidWish maidInfo, long tickCount){
         super(frame,header);
         List<UIElement> elements = new ArrayList<>();
 
@@ -37,7 +36,7 @@ public class MaidInfoPage extends Page{
 
         elements.add(UIExistTimeContainer);
 
-        UILabel UIExistTime = new UILabel(maidInfo.existTime + Component.translatable("gui.solmaiddream.maid_info.day").getString(),FoodListScreen.lessBlack);
+        UILabel UIExistTime = new UILabel(maidInfo.existed + Component.translatable("gui.solmaiddream.maid_info.day").getString(),FoodListScreen.lessBlack);
         UIExistTime.alignment = UILabel.TextAlignment.CENTER;
         UIExistTime.setWidth(107);
         UIExistTime.setHeight(UIExistTime.getHeight() + 1);
@@ -55,7 +54,7 @@ public class MaidInfoPage extends Page{
 
         elements.add(UIWishCountContainer);
 
-        UILabel UIWishCount = new UILabel(String.valueOf(maidInfo.achievedWishCount),FoodListScreen.lessBlack);
+        UILabel UIWishCount = new UILabel(String.valueOf(maidInfo.totalAchieved),FoodListScreen.lessBlack);
         UIWishCount.alignment = UILabel.TextAlignment.CENTER;
         UIWishCount.setWidth(107);
         UIWishCount.setHeight(UIWishCount.getHeight() + 1);
@@ -73,7 +72,7 @@ public class MaidInfoPage extends Page{
 
         elements.add(UIMaxWishBuffContainer);
 
-        UILabel UIMaxWishBuff = new UILabel(String.valueOf(maidInfo.maxWishBuffCount),FoodListScreen.lessBlack);
+        UILabel UIMaxWishBuff = new UILabel(String.valueOf(maidInfo.maxFulfillment),FoodListScreen.lessBlack);
         UIMaxWishBuff.alignment = UILabel.TextAlignment.CENTER;
         UIMaxWishBuff.setWidth(107);
         UIMaxWishBuff.setHeight(UIMaxWishBuff.getHeight() + 1);
@@ -91,11 +90,11 @@ public class MaidInfoPage extends Page{
 
         elements.add(UIWishBuffContainer);
 
-        UILabel UIWishBuff = new UILabel(String.valueOf(foodList.getWishesAchieved()),FoodListScreen.lessBlack);
+        UILabel UIWishBuff = new UILabel(String.valueOf(maidInfo.fulfillment),FoodListScreen.lessBlack);
         UIWishBuff.alignment = UILabel.TextAlignment.CENTER;
         UIWishBuff.setWidth(107);
         UIWishBuff.setHeight(UIWishBuff.getHeight() + 1);
-        UILabel UIWishBuffPercent = new UILabel("(" + Component.translatable("gui.solmaiddream.maid_info.attributes_increased").getString() + foodList.getWishesAchieved() * ModServerConfig.getWishBuffAddValuePercent() + "%)",FoodListScreen.lessBlack);
+        UILabel UIWishBuffPercent = new UILabel("(" + Component.translatable("gui.solmaiddream.maid_info.attributes_increased").getString() + maidInfo.fulfillment * 10 + "%)",FoodListScreen.lessBlack);
         UIWishBuffPercent.alignment = UILabel.TextAlignment.CENTER;
         UIWishBuffPercent.setWidth(107);
         UIWishBuffPercent.setHeight(UIWishBuffPercent.getHeight() + 1);

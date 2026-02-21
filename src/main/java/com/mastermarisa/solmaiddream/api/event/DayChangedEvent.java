@@ -1,4 +1,4 @@
-package com.mastermarisa.solmaiddream.event;
+package com.mastermarisa.solmaiddream.api.event;
 
 import net.neoforged.bus.api.Event;
 

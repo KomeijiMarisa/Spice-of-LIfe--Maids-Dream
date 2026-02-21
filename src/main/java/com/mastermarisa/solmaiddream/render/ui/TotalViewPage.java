@@ -1,15 +1,9 @@
 package com.mastermarisa.solmaiddream.render.ui;
 
-import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
-import com.mastermarisa.solmaiddream.config.ModServerConfig;
-import com.mastermarisa.solmaiddream.data.FoodList;
+import com.mastermarisa.solmaiddream.data.FoodRecord;
+import com.mastermarisa.solmaiddream.init.InitConfig;
 import com.mastermarisa.solmaiddream.render.ui.element.*;
-import com.mastermarisa.solmaiddream.utils.FoodNutritionManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +11,10 @@ import java.util.List;
 public class TotalViewPage extends Page{
     private final UIContainerVertical UIInfosContainer;
 
-    public TotalViewPage(Rectangle frame, String header, FoodList foodList,int totalFoodCount){
+    public TotalViewPage(Rectangle frame, String header, FoodRecord foodList, int totalFoodCount){
         super(frame,header);
 
         List<UIElement> infos = new ArrayList<>();
-        foodList.refreshTotalFoodValue();
-        foodList.refreshReachedMilestone();
 
         List<UIElement> foodInfo = new ArrayList<>();
         foodInfo.add(new UIImage(FoodListScreen.hungerImage));
@@ -30,7 +22,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIFoodInfo = UIContainerHorizontal.wrap(foodInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIFoodInfo.setWidth(107);
         infos.add(UIFoodInfo);
-        infos.add(new UILabel(foodList.getFoods().size() + "/" + totalFoodCount,FoodListScreen.lessBlack));
+        infos.add(new UILabel(foodList.size() + "/" + totalFoodCount,FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> hpInfo = new ArrayList<>();
@@ -39,7 +31,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIHPInfo = UIContainerHorizontal.wrap(hpInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIHPInfo.setWidth(107);
         infos.add(UIHPInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.HP_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.HP_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.reached + 1) * InitConfig.HP() + "/" + InitConfig.MILESTONES().size() * InitConfig.HP(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> armorInfo = new ArrayList<>();
@@ -48,7 +40,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIArmorInfo = UIContainerHorizontal.wrap(armorInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIArmorInfo.setWidth(107);
         infos.add(UIArmorInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.reached + 1) * InitConfig.ARMOR() + "/" + InitConfig.MILESTONES().size() * InitConfig.ARMOR(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> armorToughnessInfo = new ArrayList<>();
@@ -57,7 +49,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIArmorToughnessInfo = UIContainerHorizontal.wrap(armorToughnessInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIArmorToughnessInfo.setWidth(107);
         infos.add(UIArmorToughnessInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.ARMOR_TOUGHNESS_PER_MILESTONE.getAsInt(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.reached + 1) * InitConfig.ARMOR_TOUGHNESS() + "/" +InitConfig.MILESTONES().size() * InitConfig.ARMOR_TOUGHNESS(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         List<UIElement> attackDamageInfo = new ArrayList<>();
@@ -66,7 +58,7 @@ public class TotalViewPage extends Page{
         UIContainerHorizontal UIAttackDamageInfo = UIContainerHorizontal.wrap(attackDamageInfo,9,0,UIContainerHorizontal.ElementAlignment.LEFT);
         UIAttackDamageInfo.setWidth(107);
         infos.add(UIAttackDamageInfo);
-        infos.add(new UILabel((foodList.getReachedMilestone() + 1) * ModServerConfig.getAttackDamagePerMilestone() + "/" + ModServerConfig.getMilestones().size() * ModServerConfig.getAttackDamagePerMilestone(),FoodListScreen.lessBlack));
+        infos.add(new UILabel((foodList.reached + 1) * InitConfig.ATTACK_DAMAGE() + "/" + InitConfig.MILESTONES().size() * InitConfig.ATTACK_DAMAGE(),FoodListScreen.lessBlack));
         infos.add(UIBox.horizontalLine(title.getMinX(),title.getMaxX(),0,FoodListScreen.leastBlack));
 
         UIInfosContainer = UIContainerVertical.wrap(infos,3,0,UIContainerVertical.ElementAlignment.UP);

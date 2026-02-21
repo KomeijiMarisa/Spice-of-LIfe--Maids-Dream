@@ -2,27 +2,22 @@ package com.mastermarisa.solmaiddream.render.ui;
 
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
-import com.mastermarisa.solmaiddream.config.ModServerConfig;
-import com.mastermarisa.solmaiddream.data.FoodList;
-import com.mastermarisa.solmaiddream.data.MaidInfo;
-import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
+import com.mastermarisa.solmaiddream.data.FoodRecord;
+import com.mastermarisa.solmaiddream.data.MaidWish;
 import com.mastermarisa.solmaiddream.render.ui.element.*;
-import com.mastermarisa.solmaiddream.utils.FoodNutritionManager;
+import com.mastermarisa.solmaiddream.utils.FilterHelper;
+import com.mastermarisa.solmaiddream.utils.ItemHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.config.ModConfig;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,8 +45,8 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
 
     private final Player player;
     private final EntityMaid maid;
-    private final FoodList foodList;
-    private final MaidInfo maidInfo;
+    private final FoodRecord foodList;
+    private final MaidWish maidInfo;
     private final List<Item> allFoodList;
 
     private final List<Page> pages = new ArrayList<>();
@@ -84,7 +79,7 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
         pages.add(totalViewPage);
         pages.add(new MaidInfoPage(new Rectangle(0,0,147,182),Component.translatable("gui.solmaiddream.title.about_maid").getString(),foodList,maidInfo,maid.tickCount));
 
-        List<Item> foods = foodList.getFoodItems();
+        List<Item> foods = foodList.toItems();
         List<FoodViewPage> eaten = generatePagesFromItemStacks(Component.translatable("gui.solmaiddream.title.tasted_food").getString(),foods.stream().map(ItemStack::new).toList());
         pages.addAll(eaten);
         List<FoodViewPage> notEaten = generatePagesFromItemStacks(Component.translatable("gui.solmaiddream.title.untried_food").getString(),allFoodList.stream().filter((o)-> !foods.contains(o)).map(ItemStack::new).toList());
@@ -108,9 +103,9 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
         super(Component.empty());
         this.player = player;
         this.maid = maid;
-        this.foodList = maid.getData(ModAttachmentTypes.FOOD_LIST);
-        this.maidInfo = maid.getData(ModAttachmentTypes.MAID_INFO);
-        allFoodList = FoodNutritionManager.getFoodsByComponent();
+        this.foodList = maid.getData(FoodRecord.TYPE);
+        this.maidInfo = maid.getData(MaidWish.TYPE);
+        allFoodList = ItemHelper.allFoods;
 
         initPages();
         initButtons();
@@ -135,6 +130,11 @@ public class FoodListScreen extends Screen implements PageFlipButton.Pageable{
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (scrollY > 0) {
+            switchToPage(getCurrentPageNumber() - 1);
+        } else if (scrollY < 0) {
+            switchToPage(getCurrentPageNumber() + 1);
+        }
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 

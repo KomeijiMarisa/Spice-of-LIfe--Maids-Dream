@@ -1,8 +1,6 @@
 package com.mastermarisa.solmaiddream.render.ui;
 
-import com.mastermarisa.solmaiddream.data.FoodList;
 import com.mastermarisa.solmaiddream.render.ui.element.*;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;

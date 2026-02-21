@@ -1,72 +1,40 @@
 package com.mastermarisa.solmaiddream.render;
 
-import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMaidRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.EntityGraphics;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.IChatBubbleRenderer;
-import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
-import com.mastermarisa.solmaiddream.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityAttachment;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.fml.ModList;
 import org.joml.*;
 
 import java.awt.*;
-import java.lang.Math;
 import java.util.List;
 
-import static net.minecraft.client.model.TridentModel.TEXTURE;
-
 public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
-    private final int width;
-    private final int height;
+    public static final boolean IRIS_LOADED = ModList.get().isLoaded("iris");
+
     private final ResourceLocation bg;
     private final List<ItemStack> foods;
     public static final ResourceLocation texture = SOLMaidDream.resourceLocation("textures/gui/food_book.png");
 
     public MaidWishChatBubbleRenderer(int width,int height,ResourceLocation bg,List<ResourceLocation> foods){
-        this.width = width;
-        this.height = height;
         this.bg = bg;
         this.foods = foods.stream().map((o)-> new ItemStack(BuiltInRegistries.ITEM.get(o))).toList();
     }
-
-//    public int getHeight() {
-//        return this.height + 24;
-//    }
-//
-//    public int getWidth() { return (this.width + 5) * 3 + 5; }
-
-//    public int getHeight() { return 57; }
-//
-//    public int getWidth() { return 58; }
 
     public int getHeight() { return 0; }
 
@@ -80,8 +48,6 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
         ItemRenderer itemRenderer = mc.getItemRenderer();
         PoseStack poseStack = graphics.getPoseStack();
         MultiBufferSource buffer = mc.renderBuffers().bufferSource();
-//        int startX = 168;int width = 231;
-//        int startY = 0;int height = 226;
         int packedLight = graphics.getPackedLight();
 
         int xOffset = 34;//29
@@ -108,10 +74,7 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
     }
 
     private void RenderItemStackUnLit2D(ItemStack itemStack,ItemRenderer itemRenderer,MultiBufferSource buffer,PoseStack poseStack,int x,int y,float scale,int packedLight){
-        boolean shader = false;
-        if (ModUtils.IRIS_LOADED){
-            shader = ShaderStateHelper.shaderEnabled();
-        }
+        boolean shader = IRIS_LOADED && ShaderStateHelper.shaderEnabled();
 
         Vector3f shaderLightDirections$1 = null;
         Vector3f shaderLightDirections$2 = null;
@@ -156,10 +119,7 @@ public class MaidWishChatBubbleRenderer implements IChatBubbleRenderer {
     }
 
     private void RenderItemStackUnLit3D(ItemStack itemStack,ItemRenderer itemRenderer,MultiBufferSource buffer,PoseStack poseStack,int x,int y,float scale,int packedLight){
-        boolean shader = false;
-        if (ModUtils.IRIS_LOADED){
-            shader = ShaderStateHelper.shaderEnabled();
-        }
+        boolean shader = IRIS_LOADED && ShaderStateHelper.shaderEnabled();
 
         Vector3f shaderLightDirections$1 = null;
         Vector3f shaderLightDirections$2 = null;

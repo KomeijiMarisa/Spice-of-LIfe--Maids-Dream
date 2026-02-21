@@ -1,40 +1,32 @@
 package com.mastermarisa.solmaiddream.event;
 
 import com.github.tartaricacid.touhoulittlemaid.api.task.meal.MaidMealType;
-import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.ChatBubbleManager;
-import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.IChatBubbleData;
-import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.implement.ImageChatBubbleData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.NetworkHandler;
 import com.github.tartaricacid.touhoulittlemaid.network.message.SpawnParticlePackage;
 import com.mastermarisa.solmaiddream.SOLMaidDream;
-import com.mastermarisa.solmaiddream.data.MaidInfo;
-import com.mastermarisa.solmaiddream.data.ModAttachmentTypes;
-import com.mastermarisa.solmaiddream.registry.InitItems;
-import com.mastermarisa.solmaiddream.render.ui.FoodListScreen;
-import com.mastermarisa.solmaiddream.utils.MaidWishHandler;
-import com.mastermarisa.solmaiddream.utils.ModUtils;
+import com.mastermarisa.solmaiddream.utils.FilterHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-public class OnPlayerInteractMaidEvent {
+@EventBusSubscriber(modid = SOLMaidDream.MOD_ID)
+public class MaidFeeding {
     @SubscribeEvent
-    public static void onPlayerInteractMaidEvent(PlayerInteractEvent.EntityInteract event){
+    public static void onPlayerFeedMaid(PlayerInteractEvent.EntityInteract event){
         Player player = event.getEntity();
         Entity entity = event.getTarget();
+        if (player.level().isClientSide) return;
 
-        if(entity instanceof EntityMaid maid){
+        if (entity instanceof EntityMaid maid){
             if(!player.getMainHandItem().isEmpty()){
                 ItemStack stack = player.getMainHandItem();
+                if (!FilterHelper.filter(stack, maid)) return;
                 FoodProperties foodProperties = stack.getFoodProperties(maid);
                 if (foodProperties != null && !maid.isUsingItem()){
                     InteractionHand hand;
@@ -42,9 +34,7 @@ public class OnPlayerInteractMaidEvent {
                         hand = InteractionHand.MAIN_HAND;
                     } else if (maid.getItemInHand(InteractionHand.OFF_HAND).isEmpty()){
                         hand = InteractionHand.OFF_HAND;
-                    } else {
-                        return;
-                    }
+                    } else return;
                     ItemStack food = stack.split(1);
                     maid.setItemInHand(hand,food);
                     maid.getMaidBauble().fireEvent((b, s) -> {
@@ -60,9 +50,6 @@ public class OnPlayerInteractMaidEvent {
                         maid.heal(healCount);
                         NetworkHandler.sendToNearby(maid, new SpawnParticlePackage(maid.getId(), SpawnParticlePackage.Type.HEAL, stack.getUseDuration(maid)));
                     }
-                    event.setCanceled(true);
-                } else if (stack.is(Items.BOWL)){
-                    MaidWishHandler.tryRenderWishes(maid);
                     event.setCanceled(true);
                 }
             }
